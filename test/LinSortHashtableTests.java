@@ -51,9 +51,6 @@ public class LinSortHashtableTests {
 		assertTrue(tHashMap.search(2223));
 		tHashMap.delete(2223);
 		assertFalse(tHashMap.search(2223));
-		
-		
-		
 	}
 
 	@Test
@@ -75,6 +72,16 @@ public class LinSortHashtableTests {
 	
 	@Test
 	public void deleteAndSearchWithWrapAroundTest() {
-
+		tHashMap.insert(42);
+		assertTrue(tHashMap.search(42));
+		tHashMap.delete(42);
+		assertFalse(tHashMap.search(9));
+		tHashMap.insert(8);
+		tHashMap.insert(9);
+		tHashMap.insert(99);
+		tHashMap.delete(9);
+		assertTrue(tHashMap.search(99));
+		tHashMap.delete(99);
+		assertFalse(tHashMap.search(99));
 	}
 }

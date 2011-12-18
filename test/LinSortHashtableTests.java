@@ -58,14 +58,12 @@ public class LinSortHashtableTests {
 		tHashMap.insert(9);
 		assertTrue(tHashMap.search(9));
 		tHashMap.insert(99);
-		tHashMap.printOut();
 		assertTrue(tHashMap.search(9));
 		assertTrue(tHashMap.search(99));
 		tHashMap.insert(0);
 		tHashMap.insert(10);
 		tHashMap.insert(1);
 		tHashMap.insert(429);
-		tHashMap.printOut();
 		assertTrue(tHashMap.search(1));
 		assertTrue(tHashMap.search(429));
 	}
@@ -84,4 +82,18 @@ public class LinSortHashtableTests {
 		tHashMap.delete(99);
 		assertFalse(tHashMap.search(99));
 	}
+	
+	@Test
+	public void forceToRehashTest() {
+		for (int i = 0; i < 23; i++) {
+			tHashMap.insert(i);
+		}
+		assertTrue(tHashMap.getSize() >= 40);
+		
+		for (int i = 0; i < 22; i++) {
+			tHashMap.delete(i+1);
+		}
+		assertTrue(tHashMap.getSize() <= 10);
+	}
+	
 }

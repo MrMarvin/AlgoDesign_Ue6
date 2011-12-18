@@ -19,7 +19,7 @@ public class UniversalHash implements Hashfunction {
 	@Override
 	public int hash(int key) {
 		// TODO Auto-generated method stub
-		return 0;
+		return hashAB(a, b, key);
 	}
 
 	private int hashAB(int a,int b,int key){

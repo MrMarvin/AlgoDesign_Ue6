@@ -2,9 +2,9 @@ package src;
 
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 
-public class LinSortHashtable extends ALinSortHashtable {
+public class LinSortHashtable implements HashMap {
 
-	private static final int MARK = -1;
+	protected static final int MARK = -1;
 	private static final float ALPHAMIN = ((float) 1 / (float) 8);
 	private static final float ALPHAIDEAl = ((float) 1 / (float) 4);
 	private static final float ALPHAMAX = ((float) 1 / (float) 2);
@@ -98,6 +98,7 @@ public class LinSortHashtable extends ALinSortHashtable {
 		}
 		this.data = new Integer[size];
 		elementsInTable = 0;
+		// fills in all the old data in the new bigger/smaller array
 		for (Integer key : oldData) {
 			if (key != null && key != MARK) {
 				insertWithoutRehashing(key);

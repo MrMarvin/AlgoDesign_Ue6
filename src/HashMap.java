@@ -7,4 +7,5 @@ public interface HashMap {
 	boolean search(int key);
 	int getSize();
 	void printOut();
+	String describe();
 }

@@ -206,6 +206,7 @@ public class LinSortHashTable implements HashMap {
 	public int getSize() {
 		return size;
 	}
+	
 
 	/**
 	 * Prints out this table in a single horizontal line.
@@ -222,6 +223,16 @@ public class LinSortHashTable implements HashMap {
 			}
 		}
 		System.out.println();
+	}
+
+	@Override
+	public String describe() {
+		return String
+				.format("%s: I am a size %d table with %d elements at a fill rate of %f\n",
+						this.getClass().getName(),
+						getSize(),
+						elementsInTable,
+						rate());
 	}
 
 }

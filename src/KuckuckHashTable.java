@@ -50,7 +50,7 @@ public class KuckuckHashTable implements HashMap {
 				if (!detectInfinitLoop()) {
 					insert(table2.forceInsert(key), checkForResize);
 				} else {
-					//System.out.println("detected infinite loop. Need to rehash!");
+					// System.out.println("detected infinite loop. Need to rehash!");
 					rehash(table2.forceInsert(key), 0);
 				}
 			}
@@ -81,7 +81,11 @@ public class KuckuckHashTable implements HashMap {
 	 *            TODO
 	 */
 	private void rehash(Integer tmpElement, int biggerOrSmaller) {
-		//System.out.printf("before reahash: %d. New tables are of size %d. With %d / %d (%d) elements this is a rate of %f / %f\n", biggerOrSmaller, getSize(),table1.getElementsInTable(), table2.getElementsInTable(), table1.getElementsInTable()+table2.getElementsInTable(), getRate()[0],getRate()[1]);
+		// System.out.printf("before reahash: %d. New tables are of size %d. With %d / %d (%d) elements this is a rate of %f / %f\n",
+		// biggerOrSmaller, getSize(),table1.getElementsInTable(),
+		// table2.getElementsInTable(),
+		// table1.getElementsInTable()+table2.getElementsInTable(),
+		// getRate()[0],getRate()[1]);
 		detectInfinitLoopsCounter = 0;
 		Vector<Integer> allKeys = new Vector<Integer>();
 		allKeys.add(tmpElement);
@@ -91,10 +95,13 @@ public class KuckuckHashTable implements HashMap {
 		table2.rehash(biggerOrSmaller);
 		for (Integer integer : allKeys) {
 			if (integer != null) {
-				insert(integer.intValue(),false);
+				insert(integer.intValue(), false);
 			}
 		}
-		//System.out.printf("reahashed. New tables are of size %d. With %d / %d (%d) elements this is a rate of %f / %f\n\n", getSize(),table1.getElementsInTable(), table2.getElementsInTable(), table1.getElementsInTable()+table2.getElementsInTable(), getRate()[0],getRate()[1]);
+		// System.out.printf("reahashed. New tables are of size %d. With %d / %d (%d) elements this is a rate of %f / %f\n\n",
+		// getSize(),table1.getElementsInTable(), table2.getElementsInTable(),
+		// table1.getElementsInTable()+table2.getElementsInTable(),
+		// getRate()[0],getRate()[1]);
 	}
 
 	/**
@@ -146,6 +153,19 @@ public class KuckuckHashTable implements HashMap {
 		System.out.print("table2: ");
 		table2.printOut();
 		System.out.println();
+	}
+
+	@Override
+	public String describe() {
+		return String
+				.format("%s:I am a size %d table with %d / %d (%d) at a fill rate of %f / %f\n",
+						this.getClass().getName(),
+						getSize(),
+						table1.getElementsInTable(),
+						table2.getElementsInTable(),
+						table1.getElementsInTable()
+								+ table2.getElementsInTable(), getRate()[0],
+						getRate()[1]);
 	}
 
 }

@@ -17,6 +17,7 @@ public class KuckucksTable {
 	private Integer[] data;
 	private int size;
 	private int elementsInTable;
+
 	private Hashfunction hashFunction;
 
 	/**
@@ -27,6 +28,38 @@ public class KuckucksTable {
 		this.hashFunction = function;
 		this.size = size;
 		data = new Integer[size];
+	}
+
+	/**
+	 * The fill rate of this table.
+	 * 
+	 * @return alpha, the fill rate
+	 */
+	private float alpha() {
+		try {
+			return ((float) elementsInTable / (float) size);
+		} catch (ArithmeticException e) {
+			// dont devide by zero!
+			return 0;
+		}
+		
+	}
+
+	/**
+	 * Checks if this table is in range of ALPHAIDEAL
+	 * 
+	 * @throws Exception
+	 *             if a resize is needed
+	 */
+	private void checkIfResizeNeeded() throws Exception {
+		float a = alpha();
+		if (a < ALPHAMIN) {
+			//System.out.printf("need resize: a: %f < %f\n", a,ALPHAMIN);
+			throw new Exception("too big!");
+		} else if (a > ALPHAMAX) {
+			//System.out.printf("need resize: a: %f > %f\n", a,ALPHAMAX);
+			throw new Exception("too small!");
+		}
 	}
 
 	/**
@@ -55,8 +88,10 @@ public class KuckucksTable {
 		// calculate the new size
 		if (biggerOrSmaller <= -1) {
 			size = (int) size / 2;
+			//System.out.printf("resizing to: %d\n",size);
 		} else if (biggerOrSmaller >= 1) {
 			size = size * 2;
+			//System.out.printf("resizing to: %d\n",size);
 		}
 
 		// change the hashing function
@@ -73,12 +108,32 @@ public class KuckucksTable {
 	 * @param key
 	 *            is inserted
 	 * @return true if successfully inserted. False otherwise.
+	 * @throws Exception
+	 *             if this table is, after a successful insert, too full
 	 */
-	public boolean insert(int key) {
+	public boolean insert(int key) throws Exception {
+		return insert(key, true);
+	}
+
+	/**
+	 * Inserts the Key if possible.
+	 * 
+	 * @param key
+	 *            is inserted
+	 * @param checkForResize TODO
+	 * @return true if successfully inserted. False otherwise.
+	 * @throws Exception
+	 *             if this table is, after a successful insert, too full
+	 */
+	public boolean insert(int key, boolean checkForResize) throws Exception {
 		if (data[hashFunction.hash(key)] == null) {
 			// if the slot is empty: insert key
 			data[hashFunction.hash(key)] = key;
 			elementsInTable++;
+			//System.out.printf("inserting: %d\n",key);
+			if(checkForResize){
+				checkIfResizeNeeded();
+			}
 			return true;
 		} else if (data[hashFunction.hash(key)].intValue() == key) {
 			// if not empty but there already is this exact key
@@ -104,9 +159,20 @@ public class KuckucksTable {
 		return oldInhabitant;
 	}
 
-	public void delete(int key) {
+	/**
+	 * Deletes an element in this table
+	 * 
+	 * @param key
+	 *            will be deleted (if in this table)
+	 * @throws Exception
+	 *             if the table, after successfully deleting, is too big
+	 */
+	public void delete(int key) throws Exception {
 		if (search(key)) {
 			data[hashFunction.hash(key)] = null;
+			//System.out.printf("deleting: %d\n",key);
+			elementsInTable--;
+			checkIfResizeNeeded();
 		}
 	}
 
@@ -124,6 +190,14 @@ public class KuckucksTable {
 
 	public int getSize() {
 		return size;
+	}
+	
+	public float getRate() {
+		return alpha();
+	}
+	
+	public int getElementsInTable() {
+		return elementsInTable;
 	}
 
 	/**

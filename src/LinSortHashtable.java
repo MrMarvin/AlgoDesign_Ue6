@@ -41,6 +41,17 @@ public class LinSortHashTable implements HashMap {
 	 */
 	@Override
 	public void insert(int key) {
+		insert(key, true);
+	}
+
+	/**
+	 * Inserts a given key into the data. Takes care for rehashing.
+	 * 
+	 * @param key
+	 *            is the key that is to be added
+	 */
+	@Override
+	public void insert(int key, boolean checkForResize) {
 		insertWithoutRehashing(key);
 		checkAndDoRehash();
 	}

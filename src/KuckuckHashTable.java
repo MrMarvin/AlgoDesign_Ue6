@@ -35,17 +35,33 @@ public class KuckuckHashTable implements HashMap {
 	 */
 	@Override
 	public void insert(int key) {
-		// first try to insert into the first or the second table
-		if (!(table1.insert(key) || table2.insert(key))) {
-			// if both doesn't work: force it into!
-			detectInfinitLoopsCounter++;
-			if (!detectInfinitLoop()) {
-				insert(table2.forceInsert(key));
-			} else {
-				rehash(table2.forceInsert(key));
-			}
-		}
+		insert(key, true);
+	}
 
+	/**
+	 * 
+	 */
+	public void insert(int key, boolean checkForResize) {
+		try {
+			// first try to insert into the first or the second table
+			if (!(table1.insert(key, true) || table2.insert(key, true))) {
+				// if both doesn't work: force it into!
+				detectInfinitLoopsCounter++;
+				if (!detectInfinitLoop()) {
+					insert(table2.forceInsert(key), checkForResize);
+				} else {
+					//System.out.println("detected infinite loop. Need to rehash!");
+					rehash(table2.forceInsert(key), 0);
+				}
+			}
+		} catch (Exception e) {
+			if (e.getMessage() == "too small!") {
+				rehash(null, 1);
+			} else if (e.getMessage() == "too big!") {
+				// System.out.println("but i dont care. Seems that the other table complains while inserting");
+			}
+			// else: do nothing, this is not our exception!
+		}
 	}
 
 	/**
@@ -60,21 +76,25 @@ public class KuckuckHashTable implements HashMap {
 
 	/**
 	 * rehashes both tables
+	 * 
+	 * @param biggerOrSmaller
+	 *            TODO
 	 */
-	private void rehash(int tmpElement) {
-		//System.out.println("rehashing!");
+	private void rehash(Integer tmpElement, int biggerOrSmaller) {
+		//System.out.printf("before reahash: %d. New tables are of size %d. With %d / %d (%d) elements this is a rate of %f / %f\n", biggerOrSmaller, getSize(),table1.getElementsInTable(), table2.getElementsInTable(), table1.getElementsInTable()+table2.getElementsInTable(), getRate()[0],getRate()[1]);
 		detectInfinitLoopsCounter = 0;
 		Vector<Integer> allKeys = new Vector<Integer>();
 		allKeys.add(tmpElement);
 		allKeys.addAll(table1.getAllKeys());
 		allKeys.addAll(table2.getAllKeys());
-		table1.rehash(0);
-		table2.rehash(0);
+		table1.rehash(biggerOrSmaller);
+		table2.rehash(biggerOrSmaller);
 		for (Integer integer : allKeys) {
 			if (integer != null) {
-				insert(integer.intValue());
+				insert(integer.intValue(),false);
 			}
 		}
+		//System.out.printf("reahashed. New tables are of size %d. With %d / %d (%d) elements this is a rate of %f / %f\n\n", getSize(),table1.getElementsInTable(), table2.getElementsInTable(), table1.getElementsInTable()+table2.getElementsInTable(), getRate()[0],getRate()[1]);
 	}
 
 	/**
@@ -82,8 +102,15 @@ public class KuckuckHashTable implements HashMap {
 	 */
 	@Override
 	public void delete(int key) {
-		table1.delete(key);
-		table2.delete(key);
+		try {
+			table1.delete(key);
+			table2.delete(key);
+		} catch (Exception e) {
+			if (e.getMessage() == "too big!") {
+				rehash(null, -1);
+			}
+			// else: do nothing, this is not our exception!
+		}
 	}
 
 	/**
@@ -100,6 +127,13 @@ public class KuckuckHashTable implements HashMap {
 	@Override
 	public int getSize() {
 		return table1.getSize();
+	}
+
+	public float[] getRate() {
+		float[] res = new float[2];
+		res[0] = table1.getRate();
+		res[1] = table2.getRate();
+		return res;
 	}
 
 	/**

@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import src.HashMap;
-import src.LinSortHashtable;
+import src.LinSortHashTable;
 import src.SimpleHash;
 
 /**
@@ -21,7 +21,7 @@ public class LinSortHashtableTests {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		tHashMap = new LinSortHashtable(10, new SimpleHash(10));
+		tHashMap = new LinSortHashTable(10, new SimpleHash(10));
 	}
 
 	@Test

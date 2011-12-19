@@ -2,7 +2,7 @@ package src;
 
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 
-public class LinSortHashtable implements HashMap {
+public class LinSortHashTable implements HashMap {
 
 	protected static final int MARK = -1;
 	private static final float ALPHAMIN = ((float) 1 / (float) 8);
@@ -13,7 +13,7 @@ public class LinSortHashtable implements HashMap {
 	Integer[] data;
 	int elementsInTable = 0;
 
-	public LinSortHashtable(int size, Hashfunction function) {
+	public LinSortHashTable(int size, Hashfunction function) {
 		this.hashFunction = function;
 		this.size = size;
 		data = new Integer[size];

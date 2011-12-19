@@ -4,8 +4,8 @@ import java.util.Random;
 public class UniversalHash implements Hashfunction {
 
 	int r;
-	// the 10.000th prime. Taken from http://oeis.org/A000040
-	int p = 1299709;
+	// the 1000th prime. Taken from http://primes.utm.edu/lists/small/1000.txt
+	int p = 7919;
 	int a;
 	int b;
 	
@@ -23,6 +23,6 @@ public class UniversalHash implements Hashfunction {
 	}
 
 	private int hashAB(int a,int b,int key){
-		return ((a*key)+b % p) % r;
+		return (((a*key)+b) % p) % r;
 	}
 }

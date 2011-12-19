@@ -34,7 +34,7 @@ public class MainLalalala {
 				System.out.printf("searching: %d ... %s\n",newKey,hm.search(newKey));
 			}
 		}
-		System.out.println("finished. Table descibes itself as:");
+		System.out.println("finished. Table describes itself as:");
 		System.out.println(hm.describe());
 		
 	}
